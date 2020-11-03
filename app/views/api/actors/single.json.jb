@@ -1,8 +1,0 @@
-info = {
-  id: @first.id,
-  first_name: @first.first_name,
-  last_name: @first.last_name,
-  known_for: @first.known_for,
-}
-
-return info

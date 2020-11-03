@@ -1,13 +1,37 @@
 class Api::MoviesController < ApplicationController
-  def display_all
+  def index
     @movies = Movie.all
 
-    render "movie.json.jb"
+    render "index.json.jb"
   end
 
-  def display_first_movie
-    @movie = Movie.first
+  def create
+    @movies = Movie.create({
+      title: params["title"], year: params["year"], plot: params["plot"],
+    })
+    render "show.json.jb"
+  end
 
-    render "first_movie.json.jb"
+  def show
+    input = params["id"]
+    @movies = Movie.find_by(id: input)
+    render "show.json.jb"
+  end
+
+  def update
+    input = params["id"]
+    @movies = Movie.find_by(id: input)
+    @movies.title = params["title"] || @movies.title
+    @movies.year = params["year"] || @movies.year
+    @movies.plot = params["plot"] || @movies.plot
+    @movies.save
+    render "show.json.jb"
+  end
+
+  def destroy
+    input = params["id"]
+    @movies = Movie.find_by(id: input)
+    @movies.destroy
+    render json: { message: "Movie Destroyed!" }
   end
 end
