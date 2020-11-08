@@ -1,7 +1,12 @@
 class Api::ActorsController < ApplicationController
   def index
-    @actor = Actor.all
-    render "all.json.jb"
+    @actor = Actor.all.order(age: :desc)
+
+    if search = params[:search]
+      @actor = @actor.where("name LIKE?","%#{search}%")
+    
+      render "all.json.jb"
+    end
   end
   def create
     @actor = Actor.new({
@@ -9,7 +14,12 @@ class Api::ActorsController < ApplicationController
       last_name: params["last_name"]
       known_for: params["known_for"]
      })
+     @actor = @actor.save
+     if @actor.save
      render "show.json.jb"
+     else
+       render json: { error: @actor.errors.full_messages },status: :unprocessable_entity
+    end
   end
   def show
     input = params["id"]
