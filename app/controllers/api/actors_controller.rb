@@ -13,9 +13,10 @@ class Api::ActorsController < ApplicationController
       first_name: params["first_name"]
       last_name: params["last_name"]
       known_for: params["known_for"]
+      movie_id: params["movie_id"]
      })
-     @actor = @actor.save
      if @actor.save
+    
      render "show.json.jb"
      else
        render json: { error: @actor.errors.full_messages },status: :unprocessable_entity
@@ -31,8 +32,10 @@ class Api::ActorsController < ApplicationController
     @actor = Actor.find_by(id: input)   
     @actor.first_name = params["first_name"] || actor.first_name
     @actor.last_name = params["last_name"] || actor.last_name
-    @actor.known_for = params["known_for"] || actor.known_for
+    @actor.known_for = params["known_for"] || @actor.known_for
+    @actor.movie_id = params["movie_id"] || @actor.movie_id
     @actor.save
+    
     render "show.json.jb"
   end
   def destroy
