@@ -1,10 +1,11 @@
 class Api::ActorsController < ApplicationController
+  before_action :authenticates_admin, except: [:index, :show]
+
   def index
     @actor = Actor.all.order(age: :desc)
 
     if search = params[:search]
       @actor = @actor.where("name LIKE?","%#{search}%")
-    
       render "all.json.jb"
     end
   end
@@ -16,8 +17,7 @@ class Api::ActorsController < ApplicationController
       movie_id: params["movie_id"]
      })
      if @actor.save
-    
-     render "show.json.jb"
+       render "show.json.jb"
      else
        render json: { error: @actor.errors.full_messages },status: :unprocessable_entity
     end
