@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "/movies/:id" => "movies#show"
+
   namespace :api do
     post "/users" => "users#create"
 
